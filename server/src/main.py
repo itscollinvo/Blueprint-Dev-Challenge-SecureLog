@@ -1,69 +1,62 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-import os
+from cryptography.hazmat.primitives import serialization, hashes
+from cryptography.hazmat.primitives.asymmetric import padding
 import base64
-import time
-import uuid
-
 
 app = FastAPI()
 
-# pydantic model for request payload
+# Payload model
 class Payload(BaseModel):
-    key: str    # base64-encoded 32 byte key
-    data: str   # plaintext for encrypt, ciphertext for decrypt
-
-
-# base64 decode. exception: invalid input
-def decode_raw(s: str) -> bytes:
-    try:
-        return base64.b64decode(s)
-    except Exception: 
-        raise HTTPException(status_code=400, detail="Invalid base64 input")
-
-# no need for exception if decode is valid
-def encode_raw(b: bytes) -> str:
-    return base64.b64encode(b).decode()
+    key: str  # RSA key in PEM format
+    data: str  # plaintext for encrypt, ciphertext for decrypt
 
 
 @app.post("/api/v1/encrypt")
-async def encrypt(payload: Payload, request: Request):
-    # convert to byte
-    key = decode_raw(payload.key)
-    if len(key) != 32:
-        raise HTTPException(status_code=400, detail="Key must be 32 bytes")
-    
-    aesgcm = AESGCM(key)
-    nonce = os.urandom(12)
-    ct = aesgcm.encrypt(nonce, payload.data.encode(), None)
-    encrypted_data = nonce + ct
-    # log request to database
+async def encrypt(payload: Payload):
+    # Load the public key
+    try:
+        public_key = serialization.load_pem_public_key(payload.key.encode())
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid public key format")
 
-    return {"data": encode_raw(encrypted_data)}
+    # Encrypt
+    try:
+        ciphertext = public_key.encrypt(
+            payload.data.encode(),
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None
+            )
+        )
+    except Exception:
+        raise HTTPException(status_code=500, detail="Encryption failed")
+
+    return {"data": base64.b64encode(ciphertext).decode()}
 
 
 
 @app.post("/api/v1/decrypt")
-async def decrypt(payload: Payload, request: Request):
-    key = decode_raw(payload.key)
-    if len(key) != 32:
-        raise HTTPException(status_code=400, detail="Key must be 32 bytes")
-    raw = decode_raw(payload.data)
-    if len(raw) < 12 + 16: # nonce (12 bytes) + tag (16 bytes)
-        raise HTTPException(status_code=400, detail="Ciphertext too short")
-    nonce = raw[:12]
-    ct = raw[12:]
-    aesgcm = AESGCM(key)
+async def decrypt(payload: Payload):
+    # Load the private key
     try:
-        pt = aesgcm.decrypt(nonce, ct, None)
+        private_key = serialization.load_pem_private_key(payload.key.encode(), password=None)
     except Exception:
-        raise HTTPException(status_code=400, detail="Decryption failed or tag mismatch")
+        raise HTTPException(status_code=400, detail="Invalid private key format")
 
-    # log request to database here
+    # Decrypt
+    try:
+        ct_bytes = base64.b64decode(payload.data)
+        plaintext = private_key.decrypt(
+            ct_bytes,
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None
+            )
+        )
+    except Exception:
+        raise HTTPException(status_code=400, detail="Decryption failed or key mismatch")
 
-    return {"data": pt.decode()}
-
-
-
-
+    return {"data": plaintext.decode()}

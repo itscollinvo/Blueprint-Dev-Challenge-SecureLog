@@ -3,6 +3,11 @@ __pycache__/
 *.pyc
 venv/
 .env
+test_keys.py
+generate_keys.py
+private_key.pem
+public_key.pem
+test_encrypt_decrypt.py
 
 # Node.js / React (for later)
 node_modules/

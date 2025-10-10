@@ -13,5 +13,3 @@ test_encrypt_decrypt.py
 node_modules/
 build/
 
-# System files
-.DS_Store

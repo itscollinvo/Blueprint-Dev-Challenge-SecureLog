@@ -1,38 +1,33 @@
 
-+-------------------+       +-----------------+       +--------------------+
-|    React (Web)    | --->  |  FastAPI (App)  | --->  |  PostgreSQL (DB)   |
-|  localhost:3000   |       | localhost:8000  |       | localhost:5432     |
-|  User Interface   |       |  API + Logging  |       |   Stores requests  |
-+-------------------+       +-----------------+       +--------------------+
 
-Web (frontend) @ Port 3000
-located in web/
-Built using React + Fetch API
-Allows users to:
-    Enter encryption/decryption keys
-    Send request to FastAPI backend
-    view encrypted/decrypted responses
-    view request logs
+Web (frontend) @ Port 3000\n
+located in web/\n
+Built using React + Fetch API\n
+Allows users to:\n
+    Enter encryption/decryption keys\n
+    Send request to FastAPI backend\n
+    view encrypted/decrypted responses\n
+    view request logs\n
 
 
-Server (backend) @ Port 8000
-Located in server/
-Built using FastAPi
-Handles encryption, decryption, and logging into PostgreSQL
-RESTful endpoints:
-    /api/v1/encrypt
-    /api/v1/decrypt
-    /api/v1/logs
+Server (backend) @ Port 8000\n
+Located in server/\n
+Built using FastAPi\n
+Handles encryption, decryption, and logging into PostgreSQL\n
+RESTful endpoints:\n
+    /api/v1/encrypt\n
+    /api/v1/decrypt\n
+    /api/v1/logs\n
 
 
-Database (PostgreSQL)
-    stores request logs
-    automatically created using docker
+Database (PostgreSQL)\n
+    stores request logs\n
+    automatically created using docker\n
 
-Credentials:
-    POSTGRES_USER=user
-    POSTGRES_PASSWORD=password
-    POSTGRES_DB=securelog
+Credentials:\n
+    POSTGRES_USER=user\n
+    POSTGRES_PASSWORD=password\n
+    POSTGRES_DB=securelog\n
     
 --------
 
@@ -40,20 +35,20 @@ Credentials:
 Docker & Docker Compose installed
 Node.js
 Python 3.11+
-2. Clone Repo
-git clone https://github.com/itscollinvo/Blueprint-Dev-Challenge-SecureLog.git
-cd Blueprint-Dev-Challenge-SecureLog
-3. Run application with Docker
-docker compose up --build
-Frontend: http://localhost:3000
-Backend: http://localhost:8000/docs  (interactive api docs)
-PostgreSQL: localhost:5432
+2. Clone Repo\n
+git clone https://github.com/itscollinvo/Blueprint-Dev-Challenge-SecureLog.git\n
+cd Blueprint-Dev-Challenge-SecureLog\n
+3. Run application with Docker\n
+docker compose up --build\n
+Frontend: http://localhost:3000\n
+Backend: http://localhost:8000/docs  (interactive api docs)\n
+PostgreSQL: localhost:5432\n
 
-Sample API Request:
+Sample API Request:\n
 
-POST /api/v1/encrypt
+POST /api/v1/encrypt\n
 
-Request Body:
+Request Body:\n
 
 {
     "key": "-----BEGIN PUBLIC KEY-----
@@ -64,21 +59,21 @@ c4LVSTJcluoL+KQWfubXji35J+EWeoIs5GTRiqlSB4r0hX5E79N/rnbO2LHl5EfX
 Y1sRJwiEG4Sc9kK2KpcB0PjV/Bo2nRajuaX4xcJhz0Ae8Fo5STokDjN4oCdP106H
 Q5r081iq2VaV5MiGDrWJGJtAylWpFCYIH26jmZiAxF5vpPt3y02NQ92CHgHFZAxy
 mwIDAQAB
------END PUBLIC KEY-----"
-    "data": "<Type any text in here>"
+-----END PUBLIC KEY-----"\n
+    \t"data": "<Type any text in here>"
 }
 
-Response:
+Response:\n
 
-{
-    data: "<encrpyted data>"
+{\n
+    \tdata: "<encrpyted data>"
 }
 
 
-POST /api/v1/decrypt
+POST /api/v1/decrypt\n
 
-{
-    "key": "-----BEGIN RSA PRIVATE KEY-----
+{\n
+    \t"key": "-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA03t7OmyfZSwf62+khWFoyioELOwBlhptXvrCqxHIvMTfNkYE
 2ql7Kohwr+MbjHZ6Qs7bUJ2GOWqBeAtap7vFkd+UKI3HdIxH/Lh6eer5vM33oPQz
 wTuGoQzPx2fjX5vUxpXgy6kPE8ghndObeIQic4LVSTJcluoL+KQWfubXji35J+EW
@@ -104,14 +99,14 @@ IqoxxjLlkehmyvXPFIDaKe3Zb7W3rSZ3SRMMUA70QQnkwSxHDP6GGECGN2C3VT3p
 UxH5AoGBAI3p4kudi9DXwIp/schLDIMksItHdDyprA4zIVm2w2bXF8F+LmY6RJkV
 Ba2TW8k+xFI7t664cord7vkou7NUGMC3C/vy+C6zQD+H+GeUtAPSq0lO/cQfnKrG
 b1OIbGtuMMqdtnGWEa542PNmishNA8C67y4yNbxzZ72iYX/B057U
------END RSA PRIVATE KEY-----"
-    "data": "<Encrypted data from POST /api/v1/encrypt response>
-}
+-----END RSA PRIVATE KEY-----"\n
+    \t"data": "<Encrypted data from POST /api/v1/encrypt response>
+}\n
 
-Response:
+Response:\n
 
-{
-    "data": "<your decrypted message>"
+{\n
+    \t"data": "<your decrypted message>"
 }
 
 

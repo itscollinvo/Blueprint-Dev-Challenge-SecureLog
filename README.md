@@ -35,20 +35,20 @@ Credentials:\n
 Docker & Docker Compose installed
 Node.js
 Python 3.11+
-2. Clone Repo\n
+2. Clone Repo
 git clone https://github.com/itscollinvo/Blueprint-Dev-Challenge-SecureLog.git\n
 cd Blueprint-Dev-Challenge-SecureLog\n
-3. Run application with Docker\n
-docker compose up --build\n
+3. Run application with Docker
+docker compose up --build
 Frontend: http://localhost:3000\n
 Backend: http://localhost:8000/docs  (interactive api docs)\n
-PostgreSQL: localhost:5432\n
+PostgreSQL: localhost:5432
 
-Sample API Request:\n
+Sample API Request:
 
-POST /api/v1/encrypt\n
+POST /api/v1/encrypt
 
-Request Body:\n
+Request Body:
 
 {
     "key": "-----BEGIN PUBLIC KEY-----
@@ -59,21 +59,21 @@ c4LVSTJcluoL+KQWfubXji35J+EWeoIs5GTRiqlSB4r0hX5E79N/rnbO2LHl5EfX
 Y1sRJwiEG4Sc9kK2KpcB0PjV/Bo2nRajuaX4xcJhz0Ae8Fo5STokDjN4oCdP106H
 Q5r081iq2VaV5MiGDrWJGJtAylWpFCYIH26jmZiAxF5vpPt3y02NQ92CHgHFZAxy
 mwIDAQAB
------END PUBLIC KEY-----"\n
-    \t"data": "<Type any text in here>"
+-----END PUBLIC KEY-----"
+    "data": "<Type any text in here>"
 }
 
-Response:\n
+Response:
 
-{\n
-    \tdata: "<encrpyted data>"
+{
+    data: "<encrpyted data>"
 }
 
 
-POST /api/v1/decrypt\n
+POST /api/v1/decrypt
 
-{\n
-    \t"key": "-----BEGIN RSA PRIVATE KEY-----
+{
+    "key": "-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA03t7OmyfZSwf62+khWFoyioELOwBlhptXvrCqxHIvMTfNkYE
 2ql7Kohwr+MbjHZ6Qs7bUJ2GOWqBeAtap7vFkd+UKI3HdIxH/Lh6eer5vM33oPQz
 wTuGoQzPx2fjX5vUxpXgy6kPE8ghndObeIQic4LVSTJcluoL+KQWfubXji35J+EW
@@ -100,12 +100,12 @@ UxH5AoGBAI3p4kudi9DXwIp/schLDIMksItHdDyprA4zIVm2w2bXF8F+LmY6RJkV
 Ba2TW8k+xFI7t664cord7vkou7NUGMC3C/vy+C6zQD+H+GeUtAPSq0lO/cQfnKrG
 b1OIbGtuMMqdtnGWEa542PNmishNA8C67y4yNbxzZ72iYX/B057U
 -----END RSA PRIVATE KEY-----"\n
-    \t"data": "<Encrypted data from POST /api/v1/encrypt response>
-}\n
+    "data": "<Encrypted data from POST /api/v1/encrypt response>
+}
 
-Response:\n
+Response:
 
-{\n
+{
     \t"data": "<your decrypted message>"
 }
 

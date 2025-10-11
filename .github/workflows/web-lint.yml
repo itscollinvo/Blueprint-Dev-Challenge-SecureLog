@@ -1,0 +1,27 @@
+name: Web Lint
+
+on:
+  push:
+    branches:
+      - "**"   # run on every push
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: "20"
+
+    - name: Install dependencies
+      working-directory: ./web
+      run: npm install
+
+    - name: Run ESLint
+      working-directory: ./web
+      run: npx eslint src --ext .js,.jsx,.ts,.tsx
